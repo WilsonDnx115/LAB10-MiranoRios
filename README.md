@@ -2,8 +2,6 @@
 
 ## PREGUNTAS
 
-<img width="756" height="106" alt="Captura de pantalla 2026-06-13 212607" src="https://github.com/user-attachments/assets/a9f4f494-cc9d-48ff-9a8e-cc30ae042b5f" />
-
 ## ¿Por qué necesitamos Loki además de Prometheus si ya tenemos /metrics?
 
 Necesitamos Loki porque Prometheus solo maneja métricas cuantitativas, o sea solo números y contadores que te indican con precisión cuándo y cuánto se está saturando o fallando el sistema, pero carece por completo del contexto textual para explicar la causa raíz. Loki, en cambio, actúa como un indexador inteligente de logs que almacena los mensajes de error detallados y los stack traces de la aplicación, permitiéndote investigar el por qué exacto de una falla una vez que Prometheus te ha alertado sobre la anomalía. Ambos se complementan porque las métricas te dan la alarma visual del comportamiento del stack y los logs te entregan el diagnóstico técnico definitivo para solucionar el problema.
@@ -43,8 +41,7 @@ Al intentar levantarlo, aparecera el siguiente error:
 ```
 Error response from daemon: path / is mounted on / but it is not a shared mount
 ```
-
-<img width="745" height="87" alt="Image" src="https://github.com/user-attachments/assets/ebfd0d02-fc49-49f8-bfea-0390b44d7326" />
+<img width="756" height="106" alt="Captura de pantalla 2026-06-13 212607" src="https://github.com/user-attachments/assets/a9f4f494-cc9d-48ff-9a8e-cc30ae042b5f" />
 
 Esto sucede porque Docker Desktop / Docker Engine en WSL monta el sistema de archivos raiz (`/`) como un punto de montaje privado en lugar de uno compartido (shared mount). Los contenedores que necesitan propagar montajes hacia el host, como `node-exporter`, requieren que `/` sea un montaje compartido (rshared) para poder montar correctamente sus volumenes; al no serlo, Docker arroja el error "path / is mounted on / but it is not a shared mount" y el contenedor de node-exporter falla al crearse. Para solucionar el problema, en `docker-compose.yml` en el apartado de `volumes` borramos rslav.
 
