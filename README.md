@@ -22,7 +22,7 @@ La diferencia radica en que el evaluation interval determina la frecuencia exact
 
 ## 1. Clonar el repositorio
 
-Clonar el repositorio y ejecutarlo desde la carpeta principal mediante una terminal basada en WSL con la imagen de Ubuntu, debido a que los siguientes comandos de Docker no funcionan con el kernel de Windows.
+Clonar el repositorio y ejecutarlo desde la carpeta principal mediante una terminal basada en WSL con la imagen de Ubuntu, debido a que algunos comandos de Docker no funcionan con el kernel de Windows.
 
 <img width="300" height="387" alt="Image" src="https://github.com/user-attachments/assets/6ea4b39f-e50a-40f0-a4af-e36894e1cd16" />
 
@@ -43,7 +43,7 @@ Error response from daemon: path / is mounted on / but it is not a shared mount
 ```
 <img width="756" height="106" alt="Captura de pantalla 2026-06-13 212607" src="https://github.com/user-attachments/assets/a9f4f494-cc9d-48ff-9a8e-cc30ae042b5f" />
 
-Esto sucede porque Docker Desktop / Docker Engine en WSL monta el sistema de archivos raiz (`/`) como un punto de montaje privado en lugar de uno compartido (shared mount). Los contenedores que necesitan propagar montajes hacia el host, como `node-exporter`, requieren que `/` sea un montaje compartido (rshared) para poder montar correctamente sus volumenes; al no serlo, Docker arroja el error "path / is mounted on / but it is not a shared mount" y el contenedor de node-exporter falla al crearse. Para solucionar el problema, en `docker-compose.yml` en el apartado de `volumes` borramos rslav.
+Esto sucede porque Docker en WSL monta la raíz (/) de forma privada y no compartida, lo que impide que contenedores como node-exporter propaguen sus volúmenes hacia el host, bloqueando su creación con el error. . Para solucionar el problema, en `docker-compose.yml` en el apartado de `volumes` borramos rslav.
 
 ```
 volumes:
@@ -74,7 +74,11 @@ Verificamos la instalación utilizando el siguiente comando:
 docker compose version
 ```
 
-El Docker recien instalado usa `overlayfs` (driver nuevo), pero cAdvisor v0.49.1 requiere `overlay2`. Crear el archivo de configuracion con las siguientes lineas:
+El Docker recien instalado usa `overlayfs`, pero cAdvisor v0.49.1 requiere `overlay2`. Creamos el archivo de configuracion con las siguientes lineas:
+
+```
+sudo nano /etc/docker/daemon.json
+```
 
 ```json
 {
