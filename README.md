@@ -1,5 +1,7 @@
 # ENTREGABLES DE RESPUESTAS E INSTRUCCIONES
 
+Estudiante: Mirano Rios Wilson Daniel
+
 ## PREGUNTAS
 
 ## ¿Por qué necesitamos Loki además de Prometheus si ya tenemos /metrics?
